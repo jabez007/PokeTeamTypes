@@ -46,7 +46,7 @@ function statistics(arr) {
     }
 }
 
-import { getResistantTypes, generateTeams } from './pokedex.js';
+import { getResistantTypes, generateTeams } from './src/lib/pokedex.js';
 getResistantTypes()
     .then((data) => {
         const resistantTypes = data
