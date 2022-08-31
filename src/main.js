@@ -1,10 +1,10 @@
 import { createApp, } from 'vue'
-import ElementPlus from 'element-plus'
+import { createVuestic } from 'vuestic-ui'
 import App from './App.vue'
 
+import 'vuestic-ui/css'
 import './assets/main.css'
-import 'element-plus/dist/index.css'
 
 const app = createApp(App)
-app.use(ElementPlus)
+app.use(createVuestic())
 app.mount('#app')

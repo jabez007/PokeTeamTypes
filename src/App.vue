@@ -1,20 +1,20 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <el-card class="wrapper">
+    <va-card class="wrapper" color="dark" gradient>
       <HelloWorld msg="You did it!" />
-    </el-card>
+    </va-card>
   </header>
 
   <main>
     
   </main>
 </template>
+
+<script setup>
+import HelloWorld from './components/HelloWorld.vue'
+</script>
 
 <style scoped>
 header {
