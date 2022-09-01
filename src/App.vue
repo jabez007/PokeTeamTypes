@@ -2,17 +2,45 @@
   <div class="row justify--space-evenly">
     <va-progress-circle v-if="loading" indeterminate />
     <div v-for="(t, k) in types" :key="k" class="flex sm2">
-      <va-card class="item" color="dark" gradient>
-        {{ t.name }}
+      <va-card class="item" color="_dark" gradient>
+        <va-card-title class="justify--space-evenly">
+          <type-chip
+            v-for="tn in t.name.split('/')"
+            :key="tn"
+            :type="tn"
+          ></type-chip>
+        </va-card-title>
+        <va-card-content>
+          <va-divider>
+            <span class="px-2">Damage from</span>
+          </va-divider>
+          <p>Score:</p>
+          {{ t.damage_from_score }}
+          <p>Weaknesses:</p>
+          <type-chip v-for="w in t.weaknesses" :key="w" :type="w" size="small"></type-chip>
+          <p>Resistances:</p>
+          <type-chip v-for="r in t.resistances" :key="r" :type="r" size="small"></type-chip>
+          <va-divider>
+            <span class="px-2">Damage to</span>
+          </va-divider>
+          <p>Score:</p>
+          {{ t.damage_to_score }}
+          <p>Coverages:</p>
+          <type-chip v-for="c in t.coverages" :key="c" :type="c" size="small"></type-chip>
+        </va-card-content>
       </va-card>
     </div>
   </div>
 </template>
 
 <script>
+import TypeChip from "./components/TypeChip.vue";
 import { getResistantTypes, generateTeams } from "./lib/pokedex.js";
 
 export default {
+  components: {
+    TypeChip,
+  },
   data: () => ({
     loading: false,
     types: [],
