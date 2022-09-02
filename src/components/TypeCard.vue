@@ -42,14 +42,13 @@
     </va-card-content>
     <va-card-actions>
       <va-select
-        :value="modelValue"
-        @update:modelValue="$emit('update:modelValue', $event.target.value)"
+        v-model="selectedPokemon"
         :options="type.pokemon"
         :text-by="(option) => option.pokemon.name"
         :track-by="(option) => option.pokemon.name"
       >
         <template #prependInner>
-          <va-avatar color="background" :src="modelValue.sprite" />
+          <va-avatar color="background" :src="selectedPokemon.sprite" />
         </template>
       </va-select>
     </va-card-actions>
@@ -62,11 +61,21 @@ import TypeChip from "./TypeChip.vue";
 export default {
   props: {
     type: Object,
-    modelValue: Object
+    modelValue: Object,
   },
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
   components: {
     TypeChip,
+  },
+  computed: {
+    selectedPokemon: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit("update:modelValue", value);
+      },
+    },
   },
 };
 </script>
