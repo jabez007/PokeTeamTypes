@@ -12,7 +12,7 @@
         </va-card-title>
         <va-card-content>
           <va-divider>
-            <span class="px-2">Damage from</span>
+            <span class="px-2">Damage from other types</span>
           </va-divider>
           <p>Score:</p>
           {{ t.damage_from_score }}
@@ -31,7 +31,7 @@
             size="small"
           ></type-chip>
           <va-divider>
-            <span class="px-2">Damage to</span>
+            <span class="px-2">Damage to other types</span>
           </va-divider>
           <p>Score:</p>
           {{ t.damage_to_score }}
