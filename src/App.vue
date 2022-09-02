@@ -51,7 +51,10 @@
             :track-by="(option) => option.pokemon.name"
           >
             <template #prependInner>
-              <va-avatar color="background" :src="selectedPokemon[t.name].sprite" />
+              <va-avatar
+                color="background"
+                :src="selectedPokemon[t.name].sprite"
+              />
             </template>
           </va-select>
         </va-card-actions>
@@ -61,8 +64,30 @@
 </template>
 
 <script>
+//https://pokemondb.net/type/dual
 import TypeChip from "./components/TypeChip.vue";
 import { getResistantTypes, generateTeams } from "./lib/pokedex.js";
+
+function statistics(arr) {
+  if (!arr || arr.length === 0) {
+    return {
+      mean: 0,
+      standardDeviation: 0,
+    };
+  }
+
+  const n = arr.length;
+  const mean = arr.reduce((a, b) => a + b) / n;
+
+  return {
+    mean: parseFloat(mean.toFixed(2)),
+    standardDeviation: parseFloat(
+      Math.sqrt(
+        arr.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+      ).toFixed(2)
+    ),
+  };
+}
 
 export default {
   components: {
@@ -73,6 +98,98 @@ export default {
     types: [],
     selectedPokemon: {},
   }),
+  watch: {
+    selectedPokemon: {
+      handler(newVal, oldVal) {
+        const teamSize = 6;
+        const totalTypesOnTeam = 11;
+        const typesOnTeam = [
+          //"fighting"
+        ];
+        const typesNotOnTeam = [
+          //"fairy"
+        ];
+
+        const resistantTeams = generateTeams({
+          allowedTypes: [...this.types].map((t) => ({
+            ...t,
+            pokemon: newVal[t.name],
+          })),
+          teamComposition: { 
+            allowSharedTypes: false,
+            allowSharedWeaknesses: true,
+            coverWeaknesses: false 
+          }
+        });
+        console.log(`${resistantTeams.length} possible teams`);
+
+        const teamStatistics = statistics(resistantTeams.map((t) => t.score));
+
+        console.log(`Average team score: ${teamStatistics.mean}`);
+        console.log(
+          `Standard deviation of team scores: ${teamStatistics.standardDeviation}`
+        );
+
+        const selectedTeams = resistantTeams
+          .filter(
+            (tm) =>
+              tm.typesTotal >=
+              Math.min(Math.max(totalTypesOnTeam, teamSize), teamSize * 2)
+          )
+          .filter((tm) =>
+            typesOnTeam.length === 0
+            ||
+            tm.types.some((t) =>
+              typesOnTeam.some((tt) => t.split("/").includes(tt))
+            )
+          )
+          .filter((tm) => 
+            typesNotOnTeam.length === 0
+            ||
+            tm.types.every((t) =>
+              typesNotOnTeam.every((tt) => !t.split("/").includes(tt))
+            )
+          );
+
+        console.log(`${selectedTeams.length} teams selected`);
+
+        const aboveAverageSelectedTeams = selectedTeams.filter(
+          (t) => t.score >= teamStatistics.mean
+        );
+
+        console.log(`Much above average teams selected`);
+        console.log(
+          JSON.stringify(
+            aboveAverageSelectedTeams
+              .filter(
+                (t) =>
+                  t.score >=
+                  teamStatistics.mean + teamStatistics.standardDeviation
+              )
+              .slice(0, 5),
+            null,
+            2
+          )
+        );
+
+        console.log(`Above average teams selected`);
+        console.log(
+          JSON.stringify(
+            aboveAverageSelectedTeams
+              .filter(
+                (t) =>
+                  t.score <=
+                  teamStatistics.mean + teamStatistics.standardDeviation
+              )
+              .slice(0, 5),
+            null,
+            2
+          )
+        );
+      },
+      deep: true,
+    },
+  },
   created() {
     this.loading = true;
     const self = this;

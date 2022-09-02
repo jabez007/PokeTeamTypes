@@ -7,7 +7,7 @@ const BASESCORE = 18
 
 export const pokedex = new Pokedex({
     protocol: 'https',
-    timeout: 10 * 1000 * 60 // 10m
+    timeout: 20 * 1000 // 20s
 });
 
 export async function getBaseTypes(baseScore = BASESCORE) {
@@ -293,7 +293,7 @@ export async function getResistantTypes({
 }
 
 export function generateTeams({
-    types = [],
+    allowedTypes = [],
     teamSize = 6,
     teamComposition = { allowSharedTypes: true, allowSharedWeaknesses: true, coverWeaknesses: false }
 } = {}) {
@@ -304,23 +304,23 @@ export function generateTeams({
         ...teamComposition
     }
 
-    const damageToScores = types.map(t => t.damage_to_score)
+    const damageToScores = allowedTypes.map(t => t.damage_to_score)
     const maxDamageToScore = Math.max(...damageToScores)
     const minDamageToScore = Math.min(...damageToScores)
 
-    const damageFromScores = types.map(t => t.damage_from_score)
+    const damageFromScores = allowedTypes.map(t => t.damage_from_score)
     const maxDamageFromScore = Math.max(...damageFromScores)
     const minDamageFromScore = Math.min(...damageFromScores)
 
-    for (let i = 0; i < types.length; i++) {
-        types[i] = {
-            ...types[i],
+    for (let i = 0; i < allowedTypes.length; i++) {
+        allowedTypes[i] = {
+            ...allowedTypes[i],
             normalized_damage_from_score:
-                (types[i].damage_from_score - minDamageFromScore)
+                (allowedTypes[i].damage_from_score - minDamageFromScore)
                 /
                 (maxDamageFromScore - minDamageFromScore),
             normalized_damage_to_score:
-                (types[i].damage_to_score - minDamageToScore)
+                (allowedTypes[i].damage_to_score - minDamageToScore)
                 /
                 (maxDamageToScore - minDamageToScore)
         }
@@ -368,7 +368,7 @@ export function generateTeams({
             .concat(teamCombinations(typs.slice(1), size))
     }
 
-    return teamCombinations(types, teamSize)
+    return teamCombinations(allowedTypes, teamSize)
         .map((tm) => ({
             types: tm
                 .map((t) => t.name),
@@ -378,16 +378,16 @@ export function generateTeams({
                 )
             ).size,
             pokemon: tm
-                .map((t) => t.pokemon[0].pokemon.name),
+                .map((t) => t.pokemon.pokemon.name),
             score: tm
                 .map((t) => (
-                    t.pokemon[0].stats.hp
+                    t.pokemon.stats.hp
                     +
                     (
                         (
-                            t.pokemon[0].stats.attack
+                            t.pokemon.stats.attack
                             +
-                            t.pokemon[0].stats['special-attack']
+                            t.pokemon.stats['special-attack']
                         )
                         *
                         t.normalized_damage_to_score
@@ -395,15 +395,15 @@ export function generateTeams({
                     +
                     (
                         (
-                            t.pokemon[0].stats.defense
+                            t.pokemon.stats.defense
                             +
-                            t.pokemon[0].stats['special-defense']
+                            t.pokemon.stats['special-defense']
                         )
                         /
                         (1 + t.normalized_damage_from_score)
                     )
                     +
-                    t.pokemon[0].stats.speed
+                    t.pokemon.stats.speed
                 ))
                 .reduce((a, b) => a + b)
         }))
