@@ -54,6 +54,48 @@
     >
       <va-sidebar-item>
         <va-sidebar-item-content>
+          <va-icon name="bar_chart" />
+          <va-sidebar-item-title>
+            <va-input
+              label="Minimum Total Stats"
+              v-model="minimumStatsTotal"
+              type="number"
+              min="0"
+              step="10"
+            />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="crisis_alert" />
+          <va-sidebar-item-title>
+            <va-input
+              label="Minimum of Attacks"
+              v-model="minimumAttacks"
+              type="number"
+              min="0"
+              step="10"
+            />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="shield" />
+          <va-sidebar-item-title>
+            <va-input
+              label="Minimum average Defense"
+              v-model="minimumDefenses"
+              type="number"
+              min="0"
+              step="10"
+            />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
           <va-icon name="group_add" />
           <va-sidebar-item-title>
             <va-input
@@ -143,8 +185,10 @@ export default {
   data: () => ({
     loading: false,
     types: [],
+    minimumStatsTotal: 500,
+    minimumAttacks: 90,
+    minimumDefenses: 70,
     selectedPokemon: {},
-    openSidebar: true,
     teamSize: 6,
     teams: [],
     averageScore: 0,
@@ -165,17 +209,17 @@ export default {
     },
     totalTypesOnTeam(newVal) {
       this.updateTeams({
-        newTotalTypesOnTeam: newVal
+        newTotalTypesOnTeam: newVal,
       });
     },
     typesOnTeam(newVal) {
       this.updateTeams({
-        newTypesOnTeam: newVal
+        newTypesOnTeam: newVal,
       });
     },
     typesNotOnTeam(newVal) {
       this.updateTeams({
-        newTypesNotOnTeam: newVal
+        newTypesNotOnTeam: newVal,
       });
     },
   },
