@@ -1,11 +1,7 @@
 <template>
   <va-card color="_dark" gradient>
     <va-card-title class="justify--space-evenly">
-      <type-chip
-        v-for="tn in type.name.split('/')"
-        :key="tn"
-        :type="tn"
-      ></type-chip>
+      <type-chip v-for="tn in type.name.split('/')" :key="tn" :type="tn" />
     </va-card-title>
     <va-card-content>
       <va-divider>
@@ -14,31 +10,21 @@
       <p>Score:</p>
       {{ type.damage_from_score }}
       <p>Weaknesses:</p>
-      <type-chip
-        v-for="w in type.weaknesses"
-        :key="w"
-        :type="w"
-        size="small"
-      ></type-chip>
+      <type-chip v-for="w in type.weaknesses" :key="w" :type="w" size="small" />
       <p>Resistances:</p>
       <type-chip
         v-for="r in type.resistances"
         :key="r"
         :type="r"
         size="small"
-      ></type-chip>
+      />
       <va-divider>
         <span class="px-2">Damage to other types</span>
       </va-divider>
       <p>Score:</p>
       {{ type.damage_to_score }}
       <p>Coverages:</p>
-      <type-chip
-        v-for="c in type.coverages"
-        :key="c"
-        :type="c"
-        size="small"
-      ></type-chip>
+      <type-chip v-for="c in type.coverages" :key="c" :type="c" size="small" />
     </va-card-content>
     <va-card-actions>
       <va-select

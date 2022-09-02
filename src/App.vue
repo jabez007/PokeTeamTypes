@@ -1,12 +1,35 @@
 <template>
-  <div class="row justify--space-evenly">
-    <va-progress-circle v-if="loading" indeterminate />
-    <div v-for="(t, k) in types" :key="k" class="flex sm3">
-      <type-card
-        class="item"
-        v-model="selectedPokemon[t.name]"
-        :type="t"
-      ></type-card>
+  <div>
+    <va-sidebar id="sidebar" color="_dark" width="75vw" hoverable>
+      <va-sidebar-item
+        class="row align--center justify--center"
+        style="height: 100vh"
+      >
+        <va-sidebar-item-content>
+          <va-icon name="groups" />
+          <va-sidebar-item-title style="width: 50vw">
+            <va-carousel
+              v-if="teams.length > 0"
+              height="50vh"
+              color="_dark"
+              :items="new Array(teams.length)"
+              class="align--center"
+              stateful
+              infinite
+            >
+              <template #default="{ index }">
+                <team-card :team="teams[index] || {}" />
+              </template>
+            </va-carousel>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+    </va-sidebar>
+    <div class="row justify--space-evenly">
+      <va-progress-circle v-if="loading" indeterminate />
+      <div v-for="(t, k) in types" :key="k" class="flex sm3">
+        <type-card class="item" v-model="selectedPokemon[t.name]" :type="t" />
+      </div>
     </div>
   </div>
 </template>
@@ -14,6 +37,7 @@
 <script>
 //https://pokemondb.net/type/dual
 import TypeCard from "./components/TypeCard.vue";
+import TeamCard from "./components/TeamCard.vue";
 import { getResistantTypes, generateTeams } from "./lib/pokedex.js";
 
 function statistics(arr) {
@@ -40,100 +64,76 @@ function statistics(arr) {
 export default {
   components: {
     TypeCard,
+    TeamCard,
   },
   data: () => ({
     loading: false,
     types: [],
     selectedPokemon: {},
+    openSidebar: true,
+    teams: [],
   }),
   watch: {
     selectedPokemon: {
       handler(newVal, oldVal) {
-        const teamSize = 6;
-        const totalTypesOnTeam = 11;
-        const typesOnTeam = [
-          //"fighting"
-        ];
-        const typesNotOnTeam = [
-          //"fairy"
-        ];
+        const self = this;
+        setTimeout(() => {
+          const teamSize = 6;
+          const totalTypesOnTeam = 11;
+          const typesOnTeam = [
+            //"fighting"
+          ];
+          const typesNotOnTeam = [
+            //"fairy"
+          ];
 
-        const resistantTeams = generateTeams({
-          allowedTypes: [...this.types].map((t) => ({
-            ...t,
-            pokemon: newVal[t.name],
-          })),
-          teamComposition: {
-            allowSharedTypes: false,
-            allowSharedWeaknesses: true,
-            coverWeaknesses: false,
-          },
-        });
-        console.log(`${resistantTeams.length} possible teams`);
+          const resistantTeams = generateTeams({
+            allowedTypes: self.types.map((t) => ({
+              ...t,
+              pokemon: newVal[t.name],
+            })),
+            teamComposition: {
+              allowSharedTypes: false,
+              allowSharedWeaknesses: true,
+              coverWeaknesses: false,
+            },
+          });
 
-        const teamStatistics = statistics(resistantTeams.map((t) => t.score));
+          console.log(`${resistantTeams.length} possible teams`);
 
-        console.log(`Average team score: ${teamStatistics.mean}`);
-        console.log(
-          `Standard deviation of team scores: ${teamStatistics.standardDeviation}`
-        );
+          const teamStatistics = statistics(resistantTeams.map((t) => t.score));
 
-        const selectedTeams = resistantTeams
-          .filter(
-            (tm) =>
-              tm.typesTotal >=
-              Math.min(Math.max(totalTypesOnTeam, teamSize), teamSize * 2)
-          )
-          .filter(
-            (tm) =>
-              typesOnTeam.length === 0 ||
-              tm.types.some((t) =>
-                typesOnTeam.some((tt) => t.split("/").includes(tt))
-              )
-          )
-          .filter(
-            (tm) =>
-              typesNotOnTeam.length === 0 ||
-              tm.types.every((t) =>
-                typesNotOnTeam.every((tt) => !t.split("/").includes(tt))
-              )
+          console.log(`Average team score: ${teamStatistics.mean}`);
+          console.log(
+            `Standard deviation of team scores: ${teamStatistics.standardDeviation}`
           );
 
-        console.log(`${selectedTeams.length} teams selected`);
-
-        const aboveAverageSelectedTeams = selectedTeams.filter(
-          (t) => t.score >= teamStatistics.mean
-        );
-
-        console.log(`Much above average teams selected`);
-        console.log(
-          JSON.stringify(
-            aboveAverageSelectedTeams
+          self.teams.splice(
+            0,
+            self.teams.length,
+            ...resistantTeams
               .filter(
-                (t) =>
-                  t.score >=
-                  teamStatistics.mean + teamStatistics.standardDeviation
+                (tm) =>
+                  tm.typesTotal >=
+                  Math.min(Math.max(totalTypesOnTeam, teamSize), teamSize * 2)
               )
-              .slice(0, 5),
-            null,
-            2
-          )
-        );
-
-        console.log(`Above average teams selected`);
-        console.log(
-          JSON.stringify(
-            aboveAverageSelectedTeams
               .filter(
-                (t) =>
-                  t.score <=
-                  teamStatistics.mean + teamStatistics.standardDeviation
+                (tm) =>
+                  typesOnTeam.length === 0 ||
+                  tm.types.some((t) =>
+                    typesOnTeam.some((tt) => t.split("/").includes(tt))
+                  )
               )
-              .slice(0, 5),
-            null,
-            2
-          )
-        );
+              .filter(
+                (tm) =>
+                  typesNotOnTeam.length === 0 ||
+                  tm.types.every((t) =>
+                    typesNotOnTeam.every((tt) => !t.split("/").includes(tt))
+                  )
+              )
+              .filter((tm) => tm.score >= teamStatistics.mean)
+          );
+        }, 100);
       },
       deep: true,
     },
@@ -147,10 +147,14 @@ export default {
       self.loading = false;
     });
   },
+  methods: {},
 };
 </script>
 
 <style scoped>
+#sidebar {
+  position: fixed;
+}
 .item {
   margin: 1rem;
 }

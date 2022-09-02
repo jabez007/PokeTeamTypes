@@ -372,13 +372,15 @@ export function generateTeams({
         .map((tm) => ({
             types: tm
                 .map((t) => t.name),
-            typesTotal: (
-                new Set(tm
+            typesTotal: (new Set(tm
                     .flatMap((t) => t.name.split("/"))
-                )
-            ).size,
+                )).size,
             pokemon: tm
-                .map((t) => t.pokemon.pokemon.name),
+                .map((t) => ({
+                    types: t.name.split("/"),
+                    name: t.pokemon.pokemon.name,
+                    sprite: t.pokemon.sprite
+                })),
             score: tm
                 .map((t) => (
                     t.pokemon.stats.hp
