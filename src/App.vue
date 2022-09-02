@@ -1,7 +1,8 @@
 <template>
   <div>
-    <va-sidebar id="sidebar" color="_dark" width="75vw" hoverable>
+    <va-sidebar class="sidebar" color="_dark" width="75vw" gradient hoverable>
       <va-sidebar-item
+        hover-color="_dark"
         class="row align--center justify--center"
         style="height: 100vh"
       >
@@ -43,6 +44,47 @@
         <type-card class="item" v-model="selectedPokemon[t.name]" :type="t" />
       </div>
     </div>
+    <va-sidebar
+      class="sidebar"
+      color="_dark"
+      width="23rem"
+      position="right"
+      gradient
+      hoverable
+    >
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="group_add" />
+          <va-sidebar-item-title>
+            <va-input label="Team Size" type="number" min="3" max="6" />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="format_size" />
+          <va-sidebar-item-title>
+            <va-input label="Minimum Number of Types" type="number" min="3" max="12" />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="playlist_add" />
+          <va-sidebar-item-title>
+            <va-input label="Specific Types to Include" />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="playlist_remove" />
+          <va-sidebar-item-title>
+            <va-input label="Specific Types to Exclude" />
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+    </va-sidebar>
   </div>
 </template>
 
@@ -165,7 +207,7 @@ export default {
 </script>
 
 <style scoped>
-#sidebar {
+.sidebar {
   position: fixed;
 }
 .item {
