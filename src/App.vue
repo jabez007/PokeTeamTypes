@@ -8,19 +8,31 @@
         <va-sidebar-item-content>
           <va-icon name="groups" />
           <va-sidebar-item-title style="width: 50vw">
-            <va-carousel
-              v-if="teams.length > 0"
-              height="50vh"
-              color="_dark"
-              :items="new Array(teams.length)"
-              class="align--center"
-              stateful
-              infinite
-            >
-              <template #default="{ index }">
-                <team-card :team="teams[index] || {}" />
-              </template>
-            </va-carousel>
+            <va-card v-if="teams.length > 0" color="background">
+              <va-card-title class="justify--space-evenly">
+                <span> Average Score: {{ averageScore.toFixed(4) }} </span>
+                <span>
+                  Standard Deviation: {{ standardDeviation.toFixed(4) }}
+                </span>
+              </va-card-title>
+              <va-card-content>
+                <va-carousel
+                  height="29rem"
+                  color="_dark"
+                  :items="new Array(teams.length)"
+                  class="align--center"
+                  stateful
+                  infinite
+                >
+                  <template #default="{ index }">
+                    <team-card :team="teams[index] || {}" />
+                  </template>
+                </va-carousel>
+                <va-divider>
+                  <span class="px-2">Out of {{ totalPossibleTeams }}</span>
+                </va-divider>
+              </va-card-content>
+            </va-card>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -72,6 +84,9 @@ export default {
     selectedPokemon: {},
     openSidebar: true,
     teams: [],
+    averageScore: 0,
+    standardDeviation: 0,
+    totalPossibleTeams: 0,
   }),
   watch: {
     selectedPokemon: {
@@ -99,14 +114,12 @@ export default {
             },
           });
 
-          console.log(`${resistantTeams.length} possible teams`);
+          self.totalPossibleTeams = resistantTeams.length;
 
           const teamStatistics = statistics(resistantTeams.map((t) => t.score));
 
-          console.log(`Average team score: ${teamStatistics.mean}`);
-          console.log(
-            `Standard deviation of team scores: ${teamStatistics.standardDeviation}`
-          );
+          self.averageScore = teamStatistics.mean;
+          self.standardDeviation = teamStatistics.standardDeviation;
 
           self.teams.splice(
             0,
