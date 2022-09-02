@@ -226,11 +226,16 @@ export default {
   created() {
     this.loading = true;
     const self = this;
-    getResistantTypes().then((data) => {
-      self.types.splice(0, self.types.length, ...data.slice(0, 30));
-      self.types.forEach((t) => (self.selectedPokemon[t.name] = t.pokemon[0]));
-      self.loading = false;
-    });
+    getResistantTypes()
+      .then((data) => {
+        self.types.splice(0, self.types.length, ...data.slice(0, 30));
+        self.types.forEach((t) => (self.selectedPokemon[t.name] = t.pokemon[0]));
+        self.loading = false;
+      })
+      .catch((err) => {
+        console.log(err);
+        self.loading = false;
+      });
   },
   methods: {
     updateTeams({
