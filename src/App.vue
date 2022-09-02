@@ -156,62 +156,27 @@ export default {
   }),
   watch: {
     selectedPokemon: {
-      handler(newVal, oldVal) {
-        const self = this;
-        setTimeout(() => {
-          const resistantTeams = generateTeams({
-            allowedTypes: self.types.map((t) => ({
-              ...t,
-              pokemon: newVal[t.name],
-            })),
-            teamSize: self.teamSize,
-            teamComposition: {
-              allowSharedTypes: false,
-              allowSharedWeaknesses: true,
-              coverWeaknesses: false,
-            },
-          });
-
-          self.totalPossibleTeams = resistantTeams.length;
-
-          const teamStatistics = statistics(resistantTeams.map((t) => t.score));
-
-          self.averageScore = teamStatistics.mean;
-          self.standardDeviation = teamStatistics.standardDeviation;
-
-          self.teams.splice(
-            0,
-            self.teams.length,
-            ...resistantTeams
-              .filter(
-                (tm) =>
-                  tm.typesTotal >=
-                  Math.min(
-                    Math.max(self.totalTypesOnTeam, self.teamSize),
-                    self.teamSize * 2
-                  )
-              )
-              .filter(
-                (tm) =>
-                  self.typesOnTeam.length === 0 ||
-                  tm.types.some((t) =>
-                    self.typesOnTeam.some((tt) => t.split("/").includes(tt))
-                  )
-              )
-              .filter(
-                (tm) =>
-                  self.typesNotOnTeam.length === 0 ||
-                  tm.types.every((t) =>
-                    self.typesNotOnTeam.every(
-                      (tt) => !t.split("/").includes(tt)
-                    )
-                  )
-              )
-              .filter((tm) => tm.score >= teamStatistics.mean)
-          );
-        }, 100);
+      handler(newVal) {
+        this.updateTeams({
+          newSelectedPokemon: newVal,
+        });
       },
       deep: true,
+    },
+    totalTypesOnTeam(newVal) {
+      this.updateTeams({
+        newTotalTypesOnTeam: newVal
+      });
+    },
+    typesOnTeam(newVal) {
+      this.updateTeams({
+        newTypesOnTeam: newVal
+      });
+    },
+    typesNotOnTeam(newVal) {
+      this.updateTeams({
+        newTypesNotOnTeam: newVal
+      });
     },
   },
   created() {
@@ -223,7 +188,68 @@ export default {
       self.loading = false;
     });
   },
-  methods: {},
+  methods: {
+    updateTeams({
+      newSelectedPokemon = this.selectedPokemon,
+      newTeamSize = this.teamSize,
+      newTotalTypesOnTeam = this.totalTypesOnTeam,
+      newTypesOnTeam = this.typesOnTeam,
+      newTypesNotOnTeam = this.typesNotOnTeam,
+    } = {}) {
+      const self = this;
+      setTimeout(() => {
+        const resistantTeams = generateTeams({
+          allowedTypes: self.types.map((t) => ({
+            ...t,
+            pokemon: newSelectedPokemon[t.name],
+          })),
+          teamSize: newTeamSize,
+          teamComposition: {
+            allowSharedTypes: false,
+            allowSharedWeaknesses: true,
+            coverWeaknesses: false,
+          },
+        });
+
+        self.totalPossibleTeams = resistantTeams.length;
+
+        const teamStatistics = statistics(resistantTeams.map((t) => t.score));
+
+        self.averageScore = teamStatistics.mean;
+        self.standardDeviation = teamStatistics.standardDeviation;
+
+        self.teams.splice(
+          0,
+          self.teams.length,
+          ...resistantTeams
+            .filter(
+              (tm) =>
+                tm.typesTotal >=
+                Math.min(
+                  Math.max(newTotalTypesOnTeam, newTeamSize),
+                  newTeamSize * 2
+                )
+            )
+            .filter(
+              (tm) =>
+                newTypesOnTeam.length === 0 ||
+                tm.types.some((t) =>
+                  newTypesOnTeam.some((tt) => t.split("/").includes(tt))
+                )
+            )
+            .filter(
+              (tm) =>
+                newTypesNotOnTeam.length === 0 ||
+                tm.types.every((t) =>
+                  newTypesNotOnTeam.every((tt) => !t.split("/").includes(tt))
+                )
+            )
+            .filter((tm) => tm.score >= teamStatistics.mean)
+            .slice(0, 10)
+        );
+      }, 100);
+    },
+  },
 };
 </script>
 
