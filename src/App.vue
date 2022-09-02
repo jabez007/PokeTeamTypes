@@ -56,7 +56,13 @@
         <va-sidebar-item-content>
           <va-icon name="group_add" />
           <va-sidebar-item-title>
-            <va-input label="Team Size" type="number" min="3" max="6" />
+            <va-input
+              label="Team Size"
+              v-model="teamSize"
+              type="number"
+              min="3"
+              max="6"
+            />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -64,7 +70,13 @@
         <va-sidebar-item-content>
           <va-icon name="format_size" />
           <va-sidebar-item-title>
-            <va-input label="Minimum Number of Types" type="number" min="3" max="12" />
+            <va-input
+              label="Minimum Number of Types"
+              v-model="totalTypesOnTeam"
+              type="number"
+              :min="teamSize"
+              :max="teamSize * 2"
+            />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -72,7 +84,10 @@
         <va-sidebar-item-content>
           <va-icon name="playlist_add" />
           <va-sidebar-item-title>
-            <va-input label="Specific Types to Include" />
+            <type-selector
+              label="Specific Types to Include"
+              v-model="typesOnTeam"
+            />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -80,7 +95,10 @@
         <va-sidebar-item-content>
           <va-icon name="playlist_remove" />
           <va-sidebar-item-title>
-            <va-input label="Specific Types to Exclude" />
+            <type-selector
+              label="Specific Types to Exclude"
+              v-model="typesNotOnTeam"
+            />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
@@ -92,6 +110,7 @@
 //https://pokemondb.net/type/dual
 import TypeCard from "./components/TypeCard.vue";
 import TeamCard from "./components/TeamCard.vue";
+import TypeSelector from "./components/TypeSelector.vue";
 import { getResistantTypes, generateTeams } from "./lib/pokedex.js";
 
 function statistics(arr) {
@@ -119,36 +138,33 @@ export default {
   components: {
     TypeCard,
     TeamCard,
+    TypeSelector,
   },
   data: () => ({
     loading: false,
     types: [],
     selectedPokemon: {},
     openSidebar: true,
+    teamSize: 6,
     teams: [],
     averageScore: 0,
     standardDeviation: 0,
     totalPossibleTeams: 0,
+    totalTypesOnTeam: 11,
+    typesOnTeam: [],
+    typesNotOnTeam: [],
   }),
   watch: {
     selectedPokemon: {
       handler(newVal, oldVal) {
         const self = this;
         setTimeout(() => {
-          const teamSize = 6;
-          const totalTypesOnTeam = 11;
-          const typesOnTeam = [
-            //"fighting"
-          ];
-          const typesNotOnTeam = [
-            //"fairy"
-          ];
-
           const resistantTeams = generateTeams({
             allowedTypes: self.types.map((t) => ({
               ...t,
               pokemon: newVal[t.name],
             })),
+            teamSize: self.teamSize,
             teamComposition: {
               allowSharedTypes: false,
               allowSharedWeaknesses: true,
@@ -170,20 +186,25 @@ export default {
               .filter(
                 (tm) =>
                   tm.typesTotal >=
-                  Math.min(Math.max(totalTypesOnTeam, teamSize), teamSize * 2)
-              )
-              .filter(
-                (tm) =>
-                  typesOnTeam.length === 0 ||
-                  tm.types.some((t) =>
-                    typesOnTeam.some((tt) => t.split("/").includes(tt))
+                  Math.min(
+                    Math.max(self.totalTypesOnTeam, self.teamSize),
+                    self.teamSize * 2
                   )
               )
               .filter(
                 (tm) =>
-                  typesNotOnTeam.length === 0 ||
+                  self.typesOnTeam.length === 0 ||
+                  tm.types.some((t) =>
+                    self.typesOnTeam.some((tt) => t.split("/").includes(tt))
+                  )
+              )
+              .filter(
+                (tm) =>
+                  self.typesNotOnTeam.length === 0 ||
                   tm.types.every((t) =>
-                    typesNotOnTeam.every((tt) => !t.split("/").includes(tt))
+                    self.typesNotOnTeam.every(
+                      (tt) => !t.split("/").includes(tt)
+                    )
                   )
               )
               .filter((tm) => tm.score >= teamStatistics.mean)
@@ -212,5 +233,11 @@ export default {
 }
 .item {
   margin: 1rem;
+}
+</style>
+
+<style>
+.va-sidebar__menu {
+  height: 100vh;
 }
 </style>
