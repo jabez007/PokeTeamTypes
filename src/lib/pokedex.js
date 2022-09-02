@@ -238,9 +238,9 @@ export async function getResistantTypes({
                                 }
                                 //
                                 const id = Number(p.pokemon.url.split("/").slice(-2)[0])
-                                const poke = await pokedex.resource(`/api/v2/pokemon/${id}/`)
+                                const poke = await pokedex.getResource(`/api/v2/pokemon/${id}/`)
                                 const speciesId = Number(poke.species.url.split("/").slice(-2)[0])
-                                const species = await pokedex.resource(`/api/v2/pokemon-species/${speciesId}/`)
+                                const species = await pokedex.getResource(`/api/v2/pokemon-species/${speciesId}/`)
                                 //
                                 if (
                                     (species.is_legendary || species.is_mythical)
@@ -251,6 +251,7 @@ export async function getResistantTypes({
                                 }
                                 //
                                 p.types = poke.types
+                                p.sprite = poke.sprites.front_default
                                 p.stats = poke.stats
                                     .reduce((merged, curr) => {
                                         merged[curr.stat.name] = curr.base_stat
