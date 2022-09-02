@@ -7,7 +7,8 @@ const BASESCORE = 18
 
 export const pokedex = new Pokedex({
     protocol: 'https',
-    timeout: 20 * 1000 // 20s
+    timeout: 1000 * 20, // 20s
+    cacheLimit: 1000 * 60 * 60 * 24 * 7, // 1wk
 });
 
 export async function getBaseTypes(baseScore = BASESCORE) {
