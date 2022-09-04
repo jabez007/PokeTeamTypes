@@ -14,7 +14,15 @@
         infinite
       >
         <template #default="{ index }">
-          <team-card :team="filteredTeams[index] || {}" />
+          <team-card
+            :color="
+              ((filteredTeams[index] || {}).score || 0) >
+              averageScore + standardDeviation
+                ? 'success'
+                : 'warning'
+            "
+            :team="filteredTeams[index] || {}"
+          />
         </template>
       </va-carousel>
       <va-divider>
@@ -61,7 +69,7 @@ export default {
   data: () => ({}),
   computed: {
     teamsStatistics() {
-      const self = this
+      const self = this;
       return statistics(self.teams.map((t) => t.score));
     },
     averageScore() {
@@ -71,12 +79,9 @@ export default {
       return this.teamsStatistics.standardDeviation;
     },
     filteredTeams() {
-      const self = this
+      const self = this;
       return this.teams
-        .filter(
-          (tm) =>
-            tm.typesTotal >= self.totalTypesOnTeam
-        )
+        .filter((tm) => tm.typesTotal >= self.totalTypesOnTeam)
         .filter(
           (tm) =>
             self.typesOnTeam.length === 0 ||

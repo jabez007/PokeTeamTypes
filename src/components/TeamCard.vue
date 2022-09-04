@@ -1,5 +1,5 @@
 <template>
-  <va-card color="_dark" gradient>
+  <va-card :color="color" gradient>
     <va-card-title class="justify--space-evenly">
       <type-chip v-for="tn in types" :key="tn" :type="tn" />
     </va-card-title>
@@ -27,6 +27,7 @@ import TypeChip from "./TypeChip.vue";
 export default {
   props: {
     team: Object,
+    color: String
   },
   components: {
     TypeChip,
