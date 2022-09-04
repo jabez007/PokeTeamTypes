@@ -1,5 +1,5 @@
 <template>
-  <va-card color="background">
+  <va-card color="_dark" gradient>
     <va-card-title class="justify--space-evenly">
       <span> Average Score: {{ averageScore.toFixed(4) }} </span>
       <span> Standard Deviation: {{ standardDeviation.toFixed(4) }} </span>
@@ -102,3 +102,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.va-carousel {
+  background-color: var(--va-_dark);
+}
+</style>

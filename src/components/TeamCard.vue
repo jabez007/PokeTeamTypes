@@ -9,7 +9,7 @@
       >
     </va-divider>
     <va-card-content class="row justify--space-evenly">
-      <va-card color="_dark" v-for="p in team.pokemon" :key="p.name">
+      <va-card color="_dark" gradient v-for="p in team.pokemon" :key="p.name">
         <va-card-title class="justify--space-evenly">
           <type-chip v-for="pt in p.types" :key="pt" :type="pt" size="small" />
         </va-card-title>
