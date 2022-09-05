@@ -11,7 +11,7 @@
   "scripts": {
     "build": "vue-cli-service build",
     "predeploy": "npm run build",
-    "deploy": "node ./server.js",
+    "deploy": "node ./index.js",
     "serve": "vue-cli-service serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

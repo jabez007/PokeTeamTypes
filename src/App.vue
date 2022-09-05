@@ -4,9 +4,9 @@
       <va-sidebar-item
         hover-color="_dark"
         class="row align--center justify--center"
-        style="height: 100vh"
+        style="display: flex; height: 100vh;"
       >
-        <va-sidebar-item-content>
+        <va-sidebar-item-content style="width: 75vw">
           <va-icon name="groups" />
           <va-sidebar-item-title style="width: 50vw">
             <teams-carousel
