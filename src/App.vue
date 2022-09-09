@@ -97,6 +97,30 @@
       </va-sidebar-item>
       <va-sidebar-item>
         <va-sidebar-item-content>
+          <va-icon name="share" />
+          <va-sidebar-item-title>
+            <va-switch v-model="allowSharedWeaknesses">
+              <template #innerLabel>
+                Allow Shared Weaknesses
+              </template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="curtains" />
+          <va-sidebar-item-title>
+            <va-switch v-model="coverWeaknesses">
+              <template #innerLabel>
+                Cover Weaknesses
+              </template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
           <va-icon name="format_size" />
           <va-sidebar-item-title>
             <va-input
@@ -156,6 +180,8 @@ export default {
     minimumDefenses: 80,
     selectedPokemon: {},
     teamSize: 6,
+    allowSharedWeaknesses: true,
+    coverWeaknesses: false,
     teams: [],
     totalTypesOnTeam: 11,
     typesOnTeam: [],
@@ -190,6 +216,16 @@ export default {
         newTeamSize: newVal,
       });
     },
+    allowSharedWeaknesses(newVal) {
+      this.updateTeams({
+        newAllowSharedWeaknesses: newVal,
+      })
+    },
+    coverWeaknesses(newVal) {
+      this.updateTeams({
+        newCoverWeaknesses: newVal,
+      })
+    }
   },
   created() {
     this.updateTypes();
@@ -224,6 +260,8 @@ export default {
     updateTeams({
       newSelectedPokemon = this.selectedPokemon,
       newTeamSize = this.teamSize,
+      newAllowSharedWeaknesses = this.allowSharedWeaknesses,
+      newCoverWeaknesses = this.coverWeaknesses
     } = {}) {
       const self = this;
       setTimeout(() => {
@@ -238,8 +276,8 @@ export default {
             teamSize: newTeamSize,
             teamComposition: {
               allowSharedTypes: false,
-              allowSharedWeaknesses: true,
-              coverWeaknesses: false,
+              allowSharedWeaknesses: newAllowSharedWeaknesses,
+              coverWeaknesses: newCoverWeaknesses,
             },
           })
         );

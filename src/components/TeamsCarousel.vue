@@ -85,15 +85,15 @@ export default {
         .filter(
           (tm) =>
             self.typesOnTeam.length === 0 ||
-            tm.types.some((t) =>
-              self.typesOnTeam.some((tt) => t.split("/").includes(tt))
+            self.typesOnTeam.every((tt) =>
+              tm.types.some((t) => t.split("/").includes(tt))
             )
         )
         .filter(
           (tm) =>
             self.typesNotOnTeam.length === 0 ||
-            tm.types.every((t) =>
-              self.typesNotOnTeam.every((tt) => !t.split("/").includes(tt))
+            self.typesNotOnTeam.every((tt) =>
+              tm.types.every((t) => !t.split("/").includes(tt))
             )
         )
         .filter((tm) => tm.score >= self.averageScore)
