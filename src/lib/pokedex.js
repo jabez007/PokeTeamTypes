@@ -160,7 +160,7 @@ export async function getDualTypes(baseScore = BASESCORE) {
 export async function getResistantTypes({
     baseScore = BASESCORE,
     typeFilters = { minimumDamageTo: false, allowQuadrupleDamage: true },
-    pokemonFilters = { allowMegas: false, ignoreRotoms: false, ignoreHisui: true },
+    pokemonFilters = { allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
 } = {}) {
     const _typeFilters = {
@@ -170,8 +170,6 @@ export async function getResistantTypes({
     }
     const _pokemonFilters = {
         allowMegas: false,
-        ignoreRotoms: false,
-        ignoreHisui: true,
         ...pokemonFilters
     }
     const _statsFilters = {
@@ -224,16 +222,6 @@ export async function getResistantTypes({
                             .map(async (p) => {
                                 if (
                                     (!(_pokemonFilters.allowMegas) && p.pokemon.name.includes('-mega'))
-                                    ||
-                                    (_pokemonFilters.ignoreRotoms && p.pokemon.name.includes('rotom-'))
-                                    ||
-                                    (_pokemonFilters.ignoreHisui && (
-                                        p.pokemon.name.includes('-hisui')
-                                        ||
-                                        p.pokemon.name.includes('basculegion')
-                                        ||
-                                        p.pokemon.name.includes('overqwil')
-                                    ))
                                 ) {
                                     return null
                                 }

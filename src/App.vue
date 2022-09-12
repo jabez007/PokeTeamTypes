@@ -100,9 +100,7 @@
           <va-icon name="share" />
           <va-sidebar-item-title>
             <va-switch v-model="allowSharedWeaknesses">
-              <template #innerLabel>
-                Allow Shared Weaknesses
-              </template>
+              <template #innerLabel> Allow Shared Weaknesses </template>
             </va-switch>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -112,9 +110,7 @@
           <va-icon name="curtains" />
           <va-sidebar-item-title>
             <va-switch v-model="coverWeaknesses">
-              <template #innerLabel>
-                Cover Weaknesses
-              </template>
+              <template #innerLabel> Cover Weaknesses </template>
             </va-switch>
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -219,13 +215,13 @@ export default {
     allowSharedWeaknesses(newVal) {
       this.updateTeams({
         newAllowSharedWeaknesses: newVal,
-      })
+      });
     },
     coverWeaknesses(newVal) {
       this.updateTeams({
         newCoverWeaknesses: newVal,
-      })
-    }
+      });
+    },
   },
   created() {
     this.updateTypes();
@@ -248,7 +244,7 @@ export default {
         .then((data) => {
           self.types.splice(0, self.types.length, ...data.slice(0, 30));
           self.types.forEach(
-            (t) => (self.selectedPokemon[t.name] = t.pokemon[0])
+            (t) => (self.selectedPokemon[t.name] = t.pokemon.find((p) => !!p.sprite))
           );
           self.loading = false;
         })
@@ -261,7 +257,7 @@ export default {
       newSelectedPokemon = this.selectedPokemon,
       newTeamSize = this.teamSize,
       newAllowSharedWeaknesses = this.allowSharedWeaknesses,
-      newCoverWeaknesses = this.coverWeaknesses
+      newCoverWeaknesses = this.coverWeaknesses,
     } = {}) {
       const self = this;
       setTimeout(() => {
@@ -269,10 +265,12 @@ export default {
           0,
           self.teams.length,
           ...generateTeams({
-            allowedTypes: self.types.map((t) => ({
-              ...t,
-              pokemon: newSelectedPokemon[t.name],
-            })),
+            allowedTypes: self.types
+              .map((t) => ({
+                ...t,
+                pokemon: newSelectedPokemon[t.name],
+              }))
+              .filter((t) => !!t.pokemon),
             teamSize: newTeamSize,
             teamComposition: {
               allowSharedTypes: false,

@@ -29,7 +29,7 @@
     <va-card-actions>
       <va-select
         v-model="selectedPokemon"
-        :options="type.pokemon"
+        :options="[...type.pokemon, { pokemon: { name: '' } }]"
         :text-by="(option) => option.pokemon.name"
         :track-by="(option) => option.pokemon.name"
       >
@@ -56,10 +56,14 @@ export default {
   computed: {
     selectedPokemon: {
       get() {
-        return this.modelValue;
+        return this.modelValue || { pokemon: { name: '' } };
       },
       set(value) {
-        this.$emit("update:modelValue", value);
+        if (value.pokemon.name === "") {
+          this.$emit("update:modelValue", null);
+        } else {
+          this.$emit("update:modelValue", value);
+        }
       },
     },
   },
