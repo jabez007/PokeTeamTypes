@@ -1,5 +1,5 @@
 {
-  "name": "poketeamtypes",
+  "name": "PokeTeamTypes",
   "version": "1.0.0",
   "type": "module",
   "description": "Generating Pokemon teams based on type constraints",
