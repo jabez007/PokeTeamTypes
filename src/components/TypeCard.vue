@@ -27,7 +27,7 @@
       <type-chip v-for="c in type.coverages" :key="c" :type="c" size="small" />
     </va-card-content>
     <va-card-actions>
-      <pokemon-form></pokemon-form>
+      <pokemon-form @update:modelValue="type.pokemon.push($event)"></pokemon-form>
       <va-select
         v-model="selectedPokemon"
         :options="[...type.pokemon, { pokemon: { name: '' } }]"
