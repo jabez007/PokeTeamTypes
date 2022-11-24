@@ -183,7 +183,7 @@ export async function getResistantTypes({
         (await getBaseTypes(baseScore))
             .concat(await getDualTypes(baseScore))
             .filter((t) =>
-                t.damage_relations.damage_from_score <= baseScore
+                t.damage_relations.damage_from_score < baseScore
                 &&
                 (
                     (!(_typeFilters.minimumDamageTo) || t.damage_relations.damage_to_score >= baseScore)

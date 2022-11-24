@@ -99,6 +99,16 @@
         <va-sidebar-item-content>
           <va-icon name="share" />
           <va-sidebar-item-title>
+            <va-switch v-model="allowSharedTypes">
+              <template #innerLabel> Allow Shared Types </template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="share" />
+          <va-sidebar-item-title>
             <va-switch v-model="allowSharedWeaknesses">
               <template #innerLabel> Allow Shared Weaknesses </template>
             </va-switch>
@@ -176,10 +186,11 @@ export default {
     minimumDefenses: 80,
     selectedPokemon: {},
     teamSize: 6,
+    allowSharedTypes: true,
     allowSharedWeaknesses: true,
     coverWeaknesses: false,
     teams: [],
-    totalTypesOnTeam: 11,
+    totalTypesOnTeam: 6,
     typesOnTeam: [],
     typesNotOnTeam: [],
   }),
@@ -210,6 +221,11 @@ export default {
     teamSize(newVal) {
       this.updateTeams({
         newTeamSize: newVal,
+      });
+    },
+    allowSharedTypes(newVal) {
+      this.updateTeams({
+        newAllowSharedTypes: newVal,
       });
     },
     allowSharedWeaknesses(newVal) {
@@ -256,6 +272,7 @@ export default {
     updateTeams({
       newSelectedPokemon = this.selectedPokemon,
       newTeamSize = this.teamSize,
+      newAllowSharedTypes = this.allowSharedTypes,
       newAllowSharedWeaknesses = this.allowSharedWeaknesses,
       newCoverWeaknesses = this.coverWeaknesses,
     } = {}) {
@@ -273,7 +290,7 @@ export default {
               .filter((t) => !!t.pokemon),
             teamSize: newTeamSize,
             teamComposition: {
-              allowSharedTypes: false,
+              allowSharedTypes: newAllowSharedTypes,
               allowSharedWeaknesses: newAllowSharedWeaknesses,
               coverWeaknesses: newCoverWeaknesses,
             },
