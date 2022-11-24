@@ -242,7 +242,7 @@ export default {
         },
       })
         .then((data) => {
-          self.types.splice(0, self.types.length, ...data.slice(0, 30));
+          self.types.splice(0, self.types.length, ...data.filter((t) => (t.damage_from_score / t.damage_to_score) < 1));
           self.types.forEach(
             (t) => (self.selectedPokemon[t.name] = t.pokemon.find((p) => !!p.sprite))
           );

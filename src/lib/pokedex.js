@@ -154,7 +154,7 @@ export async function getDualTypes(baseScore = BASESCORE) {
 
             return _dt
         })
-        .filter((dt) => dt.pokemon.length > 0)
+        //.filter((dt) => dt.pokemon.length > 0)
 }
 
 export async function getResistantTypes({
@@ -273,7 +273,7 @@ export async function getResistantTypes({
                 })()
             }))
     ))
-        .filter((t) => t.pokemon.length > 0)
+        //.filter((t) => t.pokemon.length > 0)
         .sort((t1, t2) =>
             (t2.damage_to_score / t2.damage_from_score)
             -
