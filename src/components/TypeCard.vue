@@ -27,6 +27,7 @@
       <type-chip v-for="c in type.coverages" :key="c" :type="c" size="small" />
     </va-card-content>
     <va-card-actions>
+      <pokemon-form></pokemon-form>
       <va-select
         v-model="selectedPokemon"
         :options="[...type.pokemon, { pokemon: { name: '' } }]"
@@ -43,6 +44,7 @@
 
 <script>
 import TypeChip from "./TypeChip.vue";
+import PokemonForm from "./PokemonForm.vue"
 
 export default {
   props: {
@@ -52,6 +54,7 @@ export default {
   emits: ["update:modelValue"],
   components: {
     TypeChip,
+    PokemonForm
   },
   computed: {
     selectedPokemon: {
