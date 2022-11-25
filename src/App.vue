@@ -80,6 +80,9 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
+      <!-- -->
+      <va-divider />
+      <!-- -->
       <va-sidebar-item>
         <va-sidebar-item-content>
           <va-icon name="group_add" />
