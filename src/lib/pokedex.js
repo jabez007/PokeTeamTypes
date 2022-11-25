@@ -159,12 +159,11 @@ export async function getDualTypes(baseScore = BASESCORE) {
 
 export async function getResistantTypes({
     baseScore = BASESCORE,
-    typeFilters = { minimumDamageTo: false, allowQuadrupleDamage: true },
+    typeFilters = { allowQuadrupleDamage: true },
     pokemonFilters = { allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
 } = {}) {
     const _typeFilters = {
-        minimumDamageTo: false,
         allowQuadrupleDamage: true,
         ...typeFilters
     }
@@ -183,13 +182,9 @@ export async function getResistantTypes({
         (await getBaseTypes(baseScore))
             .concat(await getDualTypes(baseScore))
             .filter((t) =>
-                t.damage_relations.damage_from_score < baseScore
+                t.damage_relations.damage_from_score <= baseScore
                 &&
-                (
-                    (!(_typeFilters.minimumDamageTo) || t.damage_relations.damage_to_score >= baseScore)
-                    &&
-                    t.damage_relations.damage_to_score > t.damage_relations.damage_from_score
-                )
+                t.damage_relations.damage_to_score >= baseScore
                 &&
                 (
                     (

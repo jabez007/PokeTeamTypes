@@ -187,7 +187,7 @@ export default {
     selectedPokemon: {},
     teamSize: 6,
     allowSharedTypes: true,
-    allowSharedWeaknesses: true,
+    allowSharedWeaknesses: false,
     coverWeaknesses: false,
     teams: [],
     totalTypesOnTeam: 6,
