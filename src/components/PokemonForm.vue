@@ -147,6 +147,13 @@ export default {
         },
         stats_total: self.hp + self.attack + self.defense + self.spAttack + self.spDefense + self.speed
       });
+      this.name = '';
+      this.hp = 0;
+      this.attack = 0;
+      this.defense = 0;
+      this.spAttack = 0;
+      this.spDefense = 0;
+      this.speed = 0;
     },
   },
 };

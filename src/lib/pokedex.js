@@ -288,13 +288,16 @@ export function generateTeams({
         ...teamComposition
     }
 
-    const damageToScores = allowedTypes.map(t => t.damage_to_score)
-    const maxDamageToScore = Math.max(...damageToScores)
-    const minDamageToScore = Math.min(...damageToScores)
+    const damageScores = allowedTypes.reduce((acc, t) => ({
+        to: [...(acc.to || []), t.damage_to_score],
+        from: [...(acc.from || []), t.damage_from_score]
+    }), {}) 
+    
+    const maxDamageToScore = Math.max(...(damageScores.to || []))
+    const minDamageToScore = Math.min(...(damageScores.to || []))
 
-    const damageFromScores = allowedTypes.map(t => t.damage_from_score)
-    const maxDamageFromScore = Math.max(...damageFromScores)
-    const minDamageFromScore = Math.min(...damageFromScores)
+    const maxDamageFromScore = Math.max(...(damageScores.from || []))
+    const minDamageFromScore = Math.min(...(damageScores.from || []))
 
     for (let i = 0; i < allowedTypes.length; i++) {
         allowedTypes[i] = {
