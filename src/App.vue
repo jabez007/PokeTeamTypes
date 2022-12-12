@@ -24,8 +24,23 @@
     </va-sidebar>
     <div class="row justify--space-evenly">
       <va-progress-circle v-if="loading" indeterminate />
+      <div class="flex sm12">
+        <div class="row justify--center">
+          <div class="flex" style="margin: 1rem;">
+            <va-switch v-model="showEmpty">
+              <template #innerLabel>
+                Show Types without Pokemon
+              </template>
+            </va-switch>
+          </div>
+        </div>
+      </div> 
       <transition-group name="list">
-        <div v-for="t in types" :key="t.name" class="flex sm3">
+        <div 
+          v-for="t in types.filter((t) => (t.pokemon.length > 0) || showEmpty)"
+          :key="t.name" 
+          class="flex sm3"
+        >
           <type-card class="item" v-model="selectedPokemon[t.name]" :type="t" />
         </div>
       </transition-group>
@@ -183,10 +198,11 @@ export default {
   },
   data: () => ({
     loading: false,
-    types: [],
     minimumStatsTotal: 500,
     minimumAttacks: 80,
     minimumDefenses: 80,
+    showEmpty: false,
+    types: [],
     selectedPokemon: {},
     teamSize: 6,
     allowSharedTypes: true,
