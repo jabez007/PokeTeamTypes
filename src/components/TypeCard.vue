@@ -23,6 +23,8 @@
       </va-divider>
       <p>Score:</p>
       {{ type.damage_to_score }}
+      <p>Ineffectivenesses:</p>
+      <type-chip v-for="i in type.ineffectives" :key="i" :type="i" size="small" />
       <p>Coverages:</p>
       <type-chip v-for="c in type.coverages" :key="c" :type="c" size="small" />
     </va-card-content>

@@ -110,7 +110,16 @@ export async function getDualTypes(baseScore = BASESCORE) {
                         ),
                     half_damage_to: dt[0].damage_relations.half_damage_to
                         .concat(dt[1].damage_relations.half_damage_to)
-                        .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set()),
+                        .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set())
+                        .filter((hdt) => 
+                            (
+                                dt[0].damage_relations.double_damage_to
+                                    .every((dt0_ddt) => hdt.name !== dt0_ddt.name)
+                                &&
+                                dt[1].damage_relations.double_damage_to
+                                    .every((dt1_ddt) => hdt.name !== dt1_ddt.name)
+                            )
+                        ),
                     quarter_damage_from: dt[0].damage_relations.half_damage_from
                         .filter((dt0_hdf) =>
                             dt[1].damage_relations.half_damage_from
@@ -122,6 +131,15 @@ export async function getDualTypes(baseScore = BASESCORE) {
                     no_damage_to: dt[0].damage_relations.no_damage_to
                         .concat(dt[1].damage_relations.no_damage_to)
                         .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set())
+                        .filter((ndt) => 
+                            (
+                                dt[0].damage_relations.double_damage_to
+                                    .every((dt0_ddt) => ndt.name !== dt0_ddt.name)
+                                &&
+                                dt[1].damage_relations.double_damage_to
+                                    .every((dt1_ddt) => ndt.name !== dt1_ddt.name)
+                            )
+                        )
                 },
                 pokemon: dt[0].pokemon
                     .filter((dt0_p) =>
@@ -210,6 +228,9 @@ export async function getResistantTypes({
                     .concat(t.damage_relations.half_damage_from)
                     .map((r) => r.name),
                 damage_from_score: t.damage_relations.damage_from_score,
+                ineffectives: (t.damage_relations.no_damage_to || [])
+                    .concat(t.damage_relations.half_damage_to)
+                    .map((i) => i.name),
                 coverages: (t.damage_relations.double_damage_to || [])
                     .map((c) => c.name),
                 damage_to_score: t.damage_relations.damage_to_score,
