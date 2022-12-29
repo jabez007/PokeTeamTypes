@@ -184,8 +184,10 @@ export async function getResistantTypes({
             .filter((t) =>
                 t.damage_relations.damage_from_score <= baseScore
                 &&
+                /*
                 t.damage_relations.damage_to_score >= baseScore
                 &&
+                */
                 (
                     (
                         _typeFilters.allowQuadrupleDamage // but it's the only vulnerability
