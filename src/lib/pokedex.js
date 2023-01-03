@@ -363,8 +363,14 @@ export function generateTeams({
                         currentType.weaknesses
                             .some((w) => t.coverages.includes(w))
                         ||
+                        currentType.weaknesses
+                            .some((w) => t.resistances.includes(w))
+                        ||
                         currentType.coverages
                             .some((c) => t.weaknesses.includes(c))
+                        ||
+                        currentType.resistances
+                            .some((r) => t.weaknesses.includes(r))
                     )
                 ),
             size - 1
