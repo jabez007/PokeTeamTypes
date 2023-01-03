@@ -109,15 +109,17 @@ export async function getDualTypes(baseScore = BASESCORE) {
                             )
                         ),
                     half_damage_to: dt[0].damage_relations.half_damage_to
-                        .concat(dt[1].damage_relations.half_damage_to)
-                        .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set())
-                        .filter((hdt) => 
-                            (
-                                dt[0].damage_relations.double_damage_to
-                                    .every((dt0_ddt) => hdt.name !== dt0_ddt.name)
-                                &&
-                                dt[1].damage_relations.double_damage_to
-                                    .every((dt1_ddt) => hdt.name !== dt1_ddt.name)
+                        .filter((dt0_hdt) =>
+                            dt[1].damage_relations.half_damage_to
+                                .some((dt1_hdt) => dt0_hdt.name === dt1_hdt.name)
+                            ||
+                            dt[1].damage_relations.no_damage_to
+                                .some((dt1_ndt) => dt0_hdt.name === dt1_ndt.name)
+                        )
+                        .concat(dt[1].damage_relations.half_damage_to
+                            .filter((dt1_hdt) =>
+                                dt[0].damage_relations.no_damage_to
+                                    .some((dt0_ndt) => dt1_hdt.name === dt0_ndt.name)
                             )
                         ),
                     quarter_damage_from: dt[0].damage_relations.half_damage_from
@@ -129,16 +131,9 @@ export async function getDualTypes(baseScore = BASESCORE) {
                         .concat(dt[1].damage_relations.no_damage_from)
                         .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set()),
                     no_damage_to: dt[0].damage_relations.no_damage_to
-                        .concat(dt[1].damage_relations.no_damage_to)
-                        .filter(function({name}) { return !this.has(name) && this.add(name) }, new Set())
-                        .filter((ndt) => 
-                            (
-                                dt[0].damage_relations.double_damage_to
-                                    .every((dt0_ddt) => ndt.name !== dt0_ddt.name)
-                                &&
-                                dt[1].damage_relations.double_damage_to
-                                    .every((dt1_ddt) => ndt.name !== dt1_ddt.name)
-                            )
+                        .filter((dt0_ndt) =>
+                            dt[1].damage_relations.no_damage_to
+                                .some((dt1_ndt) => dt0_ndt.name === dt1_ndt.name)
                         )
                 },
                 pokemon: dt[0].pokemon
