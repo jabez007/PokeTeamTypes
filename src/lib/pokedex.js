@@ -172,11 +172,12 @@ export async function getDualTypes(baseScore = BASESCORE) {
 
 export async function getResistantTypes({
     baseScore = BASESCORE,
-    typeFilters = { allowQuadrupleDamage: true },
+    typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true },
     pokemonFilters = { allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
 } = {}) {
     const _typeFilters = {
+        maxDamageFromScore: true,
         allowQuadrupleDamage: true,
         ...typeFilters
     }
@@ -195,12 +196,14 @@ export async function getResistantTypes({
         (await getBaseTypes(baseScore))
             .concat(await getDualTypes(baseScore))
             .filter((t) =>
-                t.damage_relations.damage_from_score <= baseScore
+                (
+                    !(_typeFilters.maxDamageFromScore)
+                    ||
+                    t.damage_relations.damage_from_score <= baseScore
+                )
                 &&
-                /*
-                t.damage_relations.damage_to_score >= baseScore
+                t.damage_relations.damage_to_score >= t.damage_relations.damage_from_score
                 &&
-                */
                 (
                     (
                         _typeFilters.allowQuadrupleDamage // but it's the only vulnerability

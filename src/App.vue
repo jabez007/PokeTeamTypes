@@ -55,6 +55,29 @@
     >
       <va-sidebar-item>
         <va-sidebar-item-content>
+          <va-icon name="score" />
+          <va-sidebar-item-title>
+            <va-switch v-model="maxDamageFromScore">
+              <template #innerLabel>Max Damage From Score = 18</template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="looks_4" />
+          <va-sidebar-item-title>
+            <va-switch v-model="allowQuadrupleDamage">
+              <template #innerLabel>Allow Quadruple Damage</template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <!-- -->
+      <va-divider />
+      <!-- -->
+      <va-sidebar-item>
+        <va-sidebar-item-content>
           <va-icon name="bar_chart" />
           <va-sidebar-item-title>
             <va-input
@@ -198,6 +221,8 @@ export default {
   },
   data: () => ({
     loading: false,
+    maxDamageFromScore: true,
+    allowQuadrupleDamage: true,
     minimumStatsTotal: 500,
     minimumAttacks: 80,
     minimumDefenses: 80,
@@ -214,6 +239,16 @@ export default {
     typesNotOnTeam: [],
   }),
   watch: {
+    maxDamageFromScore(newVal) {
+      this.updateTypes({
+        newMaxDamageFromScore: newVal,
+      });
+    },
+    allowQuadrupleDamage(newVal) {
+      this.updateTypes({
+        newAllowQuadrupleDamage: newVal,
+      });
+    },
     minimumStatsTotal(newVal) {
       this.updateTypes({
         newMinimumStatsTotal: newVal,
@@ -263,6 +298,8 @@ export default {
   },
   methods: {
     updateTypes({
+      newMaxDamageFromScore = this.maxDamageFromScore,
+      newAllowQuadrupleDamage = this.allowQuadrupleDamage,
       newMinimumStatsTotal = this.minimumStatsTotal,
       newMinimumAttacks = this.minimumAttacks,
       newMinimumDefenses = this.minimumDefenses,
@@ -270,6 +307,10 @@ export default {
       this.loading = true;
       const self = this;
       getResistantTypes({
+        typeFilters: {
+          maxDamageFromScore: newMaxDamageFromScore,
+          allowQuadrupleDamage: newAllowQuadrupleDamage
+        },
         statsFilters: {
           minimumStatsTotal: newMinimumStatsTotal,
           minimumAttacks: newMinimumAttacks,
@@ -277,7 +318,7 @@ export default {
         },
       })
         .then((data) => {
-          self.types.splice(0, self.types.length, ...data.filter((t) => (t.damage_from_score / t.damage_to_score) < 1));
+          self.types.splice(0, self.types.length, ...data);
           self.types.forEach(
             (t) => (self.selectedPokemon[t.name] = t.pokemon.find((p) => !!p.sprite))
           );
