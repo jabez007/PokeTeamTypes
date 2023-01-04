@@ -172,13 +172,14 @@ export async function getDualTypes(baseScore = BASESCORE) {
 
 export async function getResistantTypes({
     baseScore = BASESCORE,
-    typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true },
+    typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true, limitQuadrupleDamage: false },
     pokemonFilters = { allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
 } = {}) {
     const _typeFilters = {
         maxDamageFromScore: true,
         allowQuadrupleDamage: true,
+        limitQuadrupleDamage: false,
         ...typeFilters
     }
     const _pokemonFilters = {
@@ -206,11 +207,17 @@ export async function getResistantTypes({
                 &&
                 (
                     (
-                        _typeFilters.allowQuadrupleDamage // but it's the only vulnerability
+                        _typeFilters.allowQuadrupleDamage
                         &&
-                        (t.damage_relations.quadruple_damage_from || []).length === 1
-                        &&
-                        (t.damage_relations.double_damage_from || []).length === 0
+                        (
+                            !(_typeFilters.limitQuadrupleDamage) // but it's the only vulnerability
+                            ||
+                            (
+                                (t.damage_relations.quadruple_damage_from || []).length === 1
+                                &&
+                                (t.damage_relations.double_damage_from || []).length === 0
+                            )
+                        )
                     )
                     ||
                     (t.damage_relations.quadruple_damage_from || []).length === 0

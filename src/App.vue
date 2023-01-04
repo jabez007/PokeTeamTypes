@@ -73,6 +73,16 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
+          <va-icon name="network_locked" />
+          <va-sidebar-item-title>
+            <va-switch v-model="limitQuadrupleDamage">
+              <template #innerLabel>Limit Quadruple Damage</template>
+            </va-switch>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
       <!-- -->
       <va-divider />
       <!-- -->
@@ -223,6 +233,7 @@ export default {
     loading: false,
     maxDamageFromScore: true,
     allowQuadrupleDamage: true,
+    limitQuadrupleDamage: false,
     minimumStatsTotal: 500,
     minimumAttacks: 80,
     minimumDefenses: 80,
@@ -247,6 +258,11 @@ export default {
     allowQuadrupleDamage(newVal) {
       this.updateTypes({
         newAllowQuadrupleDamage: newVal,
+      });
+    },
+    limitQuadrupleDamage(newVal) {
+      this.updateTypes({
+        newLimitQuadrupleDamage: newVal,
       });
     },
     minimumStatsTotal(newVal) {
@@ -300,6 +316,7 @@ export default {
     updateTypes({
       newMaxDamageFromScore = this.maxDamageFromScore,
       newAllowQuadrupleDamage = this.allowQuadrupleDamage,
+      newLimitQuadrupleDamage = this.limitQuadrupleDamage,
       newMinimumStatsTotal = this.minimumStatsTotal,
       newMinimumAttacks = this.minimumAttacks,
       newMinimumDefenses = this.minimumDefenses,
@@ -309,7 +326,8 @@ export default {
       getResistantTypes({
         typeFilters: {
           maxDamageFromScore: newMaxDamageFromScore,
-          allowQuadrupleDamage: newAllowQuadrupleDamage
+          allowQuadrupleDamage: newAllowQuadrupleDamage,
+          limitQuadrupleDamage: newLimitQuadrupleDamage,
         },
         statsFilters: {
           minimumStatsTotal: newMinimumStatsTotal,
