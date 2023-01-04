@@ -302,7 +302,7 @@ export async function getResistantTypes({
             const t2Quotient = (t2.damage_from_score / t2.damage_to_score)
 
             if (t2Quotient === t1Quotient) {
-                return t2.damage_from_score - t1.damage_from_score
+                return t1.damage_from_score - t2.damage_from_score
             } else {
                 return t1Quotient - t2Quotient
             }
