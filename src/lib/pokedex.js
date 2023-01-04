@@ -290,11 +290,16 @@ export async function getResistantTypes({
             }))
     ))
         //.filter((t) => t.pokemon.length > 0)
-        .sort((t1, t2) =>
-            (t2.damage_to_score / t2.damage_from_score)
-            -
-            (t1.damage_to_score / t1.damage_from_score)
-        )
+        .sort((t1, t2) => {
+            const t1Quotient = (t1.damage_from_score / t1.damage_to_score)
+            const t2Quotient = (t2.damage_from_score / t2.damage_to_score)
+
+            if (t2Quotient === t1Quotient) {
+                return t2.damage_from_score - t1.damage_from_score
+            } else {
+                return t1Quotient - t2Quotient
+            }
+        })
 }
 
 export function generateTeams({
