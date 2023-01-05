@@ -21,6 +21,7 @@
   "dependencies": {
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
+    "lscache": "^1.3.2",
     "push-dir": "^0.4.1",
     "sha.js": "^2.4.11"
   },

@@ -219,6 +219,7 @@
 <script>
 //https://pokemondb.net/type/dual
 import shajs from "sha.js";
+import lscache from "lscache";
 import TypeCard from "./components/TypeCard.vue";
 import TeamsCarousel from "./components/TeamsCarousel.vue";
 import TypeSelector from "./components/TypeSelector.vue";
@@ -324,33 +325,46 @@ export default {
     } = {}) {
       this.loading = true;
       const self = this;
+      
       const key = shajs('sha256')
         .update(`${newMaxDamageFromScore}${newAllowQuadrupleDamage}${newLimitQuadrupleDamage}${newMinimumStatsTotal}${newMinimumAttacks}${newMinimumDefenses}`)
         .digest('hex');
-
-      getResistantTypes({
-        typeFilters: {
-          maxDamageFromScore: newMaxDamageFromScore,
-          allowQuadrupleDamage: newAllowQuadrupleDamage,
-          limitQuadrupleDamage: newLimitQuadrupleDamage,
-        },
-        statsFilters: {
-          minimumStatsTotal: newMinimumStatsTotal,
-          minimumAttacks: newMinimumAttacks,
-          minimumDefenses: newMinimumDefenses,
-        },
-      })
-        .then((data) => {
-          self.types.splice(0, self.types.length, ...data);
-          self.types.forEach(
-            (t) => (self.selectedPokemon[t.name] = t.pokemon.find((p) => !!p.sprite))
-          );
-          self.loading = false;
+      
+      function loadTypes(data) {
+        self.types.splice(0, self.types.length, ...data);
+        self.types.forEach(
+          (t) => (self.selectedPokemon[t.name] = t.pokemon.find((p) => !!p.sprite))
+        );
+        self.loading = false;
+      }
+      
+      const json = lscache.get(key);
+      if (json) {
+        setTimeout(() => {
+          loadTypes(json)
+        }, 100);
+      } else {
+        getResistantTypes({
+          typeFilters: {
+            maxDamageFromScore: newMaxDamageFromScore,
+            allowQuadrupleDamage: newAllowQuadrupleDamage,
+            limitQuadrupleDamage: newLimitQuadrupleDamage,
+          },
+          statsFilters: {
+            minimumStatsTotal: newMinimumStatsTotal,
+            minimumAttacks: newMinimumAttacks,
+            minimumDefenses: newMinimumDefenses,
+          },
         })
-        .catch((err) => {
-          console.log(err);
-          self.loading = false;
-        });
+          .then((json) => {
+            lscache.set(key, json, 60 * 24); // cache for a day
+            loadTypes(json);
+          })
+          .catch((err) => {
+            console.log(err);
+            self.loading = false;
+          });
+      }
     },
     updateTeams({
       newSelectedPokemon = this.selectedPokemon,
