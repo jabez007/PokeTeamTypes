@@ -218,6 +218,7 @@
 
 <script>
 //https://pokemondb.net/type/dual
+import shajs from "sha.js";
 import TypeCard from "./components/TypeCard.vue";
 import TeamsCarousel from "./components/TeamsCarousel.vue";
 import TypeSelector from "./components/TypeSelector.vue";
@@ -323,6 +324,10 @@ export default {
     } = {}) {
       this.loading = true;
       const self = this;
+      const key = shajs('sha256')
+        .update(`${newMaxDamageFromScore}${newAllowQuadrupleDamage}${newLimitQuadrupleDamage}${newMinimumStatsTotal}${newMinimumAttacks}${newMinimumDefenses}`)
+        .digest('hex');
+
       getResistantTypes({
         typeFilters: {
           maxDamageFromScore: newMaxDamageFromScore,
