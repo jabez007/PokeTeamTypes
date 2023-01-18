@@ -172,14 +172,14 @@ export async function getDualTypes(baseScore = BASESCORE) {
 
 export async function getResistantTypes({
     baseScore = BASESCORE,
-    typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true, limitQuadrupleDamage: false },
+    typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true, limitQuadrupleDamage: true },
     pokemonFilters = { allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
 } = {}) {
     const _typeFilters = {
         maxDamageFromScore: true,
         allowQuadrupleDamage: true,
-        limitQuadrupleDamage: false,
+        limitQuadrupleDamage: true,
         ...typeFilters
     }
     const _pokemonFilters = {
@@ -311,13 +311,13 @@ export async function getResistantTypes({
 
 export function generateTeams({
     allowedTypes = [],
-    teamSize = 6,
-    teamComposition = { allowSharedTypes: true, allowSharedWeaknesses: true, coverWeaknesses: false }
+    teamSize = 3,
+    teamComposition = { allowSharedTypes: true, allowSharedWeaknesses: false, coverWeaknesses: true }
 } = {}) {
     const _teamComposition = {
         allowSharedTypes: true,
-        allowSharedWeaknesses: true,
-        coverWeaknesses: false,
+        allowSharedWeaknesses: false,
+        coverWeaknesses: true,
         ...teamComposition
     }
 
