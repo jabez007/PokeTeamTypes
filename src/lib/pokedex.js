@@ -176,7 +176,7 @@ export async function getResistantTypes({
     baseScore = BASESCORE,
     typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true, limitQuadrupleDamage: true },
     pokemonFilters = { allowMegas: false },
-    statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 70 }
+    statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 80 }
 } = {}) {
     const _typeFilters = {
         maxDamageFromScore: true,
@@ -191,7 +191,7 @@ export async function getResistantTypes({
     const _statsFilters = {
         minimumStatsTotal: 500,
         minimumAttacks: 90,
-        minimumDefenses: 70,
+        minimumDefenses: 80,
         ...statsFilters
     }
 
@@ -306,6 +306,7 @@ export async function getResistantTypes({
             }))
     ))
         //.filter((t) => t.pokemon.length > 0)
+        .filter((t) => t.coverages.length >= t.weaknesses.length)
         .sort((t1, t2) => {
             const t1Quotient = (t1.damage_from_score / t1.damage_to_score)
             const t2Quotient = (t2.damage_from_score / t2.damage_to_score)

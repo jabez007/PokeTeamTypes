@@ -238,7 +238,7 @@ export default {
     limitQuadrupleDamage: true,
     minimumStatsTotal: 500,
     minimumAttacks: 90,
-    minimumDefenses: 70,
+    minimumDefenses: 80,
     showEmpty: false,
     types: [],
     selectedPokemon: {},
