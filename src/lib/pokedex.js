@@ -165,6 +165,8 @@ export async function getDualTypes(baseScore = BASESCORE) {
                 -
                 _dt.damage_relations.no_damage_to.length
 
+            //console.log(`${_dt.name}: ${_dt.pokemon.map(p => p.pokemon.name)}`);
+            
             return _dt
         })
         //.filter((dt) => dt.pokemon.length > 0)
@@ -257,8 +259,15 @@ export async function getResistantTypes({
                                 if (
                                     (species.is_legendary || species.is_mythical)
                                     ||
-                                    species.egg_groups.every((eg) => eg.name === 'no-eggs')
+                                    (
+                                        species.egg_groups.length > 0
+                                        &&
+                                        species.egg_groups.every((eg) => eg.name === 'no-eggs')
+                                    )
+                                    ||
+                                    ['koraidon', 'miraidon', 'roaring-moon', 'iron-valiant', 'great-tusk', 'brute-bonnet', 'sandy-shocks', 'scream-tail', 'flutter-mane', 'slither-wing', 'iron-treads', 'iron-moth', 'iron-hands', 'iron-jugulis', 'iron-thorns', 'iron-bundle', 'ting-lu', 'chien-pao', 'wo-chien', 'chi-yu', 'gholdengo'].includes(p.pokemon.name) // gen 9
                                 ) {
+                                    //console.log(`Not breedable: ${p.pokemon.name}`)
                                     return null
                                 }
                                 //

@@ -357,7 +357,9 @@ export default {
           },
         })
           .then((json) => {
-            lscache.set(key, json, 60 * 24); // cache for a day
+            if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+              lscache.set(key, json, 60 * 24); // cache for a day
+            }
             loadTypes(json);
           })
           .catch((err) => {
