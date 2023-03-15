@@ -55,6 +55,23 @@
     >
       <va-sidebar-item>
         <va-sidebar-item-content>
+          <va-icon name="map" />
+          <va-sidebar-item-title>
+            <va-select
+              label="Pokemon from"
+              v-model="inPokedex"
+              :options="['national', 'galar', 'sinnoh', 'hisui', 'paldea']"
+              searchable
+            >
+              <template #content="{ value }">
+                {{ value[0].toUpperCase() + value.slice(1) }}
+              </template>
+            </va-select>
+          </va-sidebar-item-title>
+        </va-sidebar-item-content>
+      </va-sidebar-item>
+      <va-sidebar-item>
+        <va-sidebar-item-content>
           <va-icon name="score" />
           <va-sidebar-item-title>
             <va-switch v-model="maxDamageFromScore">
@@ -190,7 +207,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <va-sidebar-item>
+      <!--va-sidebar-item>
         <va-sidebar-item-content>
           <va-icon name="playlist_add" />
           <va-sidebar-item-title>
@@ -200,8 +217,8 @@
             />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
-      </va-sidebar-item>
-      <va-sidebar-item>
+      </va-sidebar-item-->
+      <!--va-sidebar-item>
         <va-sidebar-item-content>
           <va-icon name="playlist_remove" />
           <va-sidebar-item-title>
@@ -211,7 +228,7 @@
             />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
-      </va-sidebar-item>
+      </va-sidebar-item-->
     </va-sidebar>
   </div>
 </template>
@@ -233,6 +250,7 @@ export default {
   },
   data: () => ({
     loading: false,
+    inPokedex: 'national',
     maxDamageFromScore: true,
     allowQuadrupleDamage: true,
     limitQuadrupleDamage: true,
@@ -252,6 +270,11 @@ export default {
     typesNotOnTeam: [],
   }),
   watch: {
+    inPokedex(newVal) {
+      this.updateTypes({
+        newInPokedex: newVal,
+      });
+    },
     maxDamageFromScore(newVal) {
       this.updateTypes({
         newMaxDamageFromScore: newVal,
@@ -316,6 +339,7 @@ export default {
   },
   methods: {
     updateTypes({
+      newInPokedex = this.inPokedex,
       newMaxDamageFromScore = this.maxDamageFromScore,
       newAllowQuadrupleDamage = this.allowQuadrupleDamage,
       newLimitQuadrupleDamage = this.limitQuadrupleDamage,
@@ -327,7 +351,7 @@ export default {
       const self = this;
       
       const key = shajs('sha256')
-        .update(`${newMaxDamageFromScore}${newAllowQuadrupleDamage}${newLimitQuadrupleDamage}${newMinimumStatsTotal}${newMinimumAttacks}${newMinimumDefenses}`)
+        .update(`${newInPokedex}${newMaxDamageFromScore}${newAllowQuadrupleDamage}${newLimitQuadrupleDamage}${newMinimumStatsTotal}${newMinimumAttacks}${newMinimumDefenses}`)
         .digest('hex');
       
       function loadTypes(data) {
@@ -355,6 +379,9 @@ export default {
             minimumAttacks: newMinimumAttacks,
             minimumDefenses: newMinimumDefenses,
           },
+          pokemonFilters: {
+            inPokedex: newInPokedex
+          }
         })
           .then((json) => {
             if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
