@@ -374,13 +374,13 @@ export default {
             allowQuadrupleDamage: newAllowQuadrupleDamage,
             limitQuadrupleDamage: newLimitQuadrupleDamage,
           },
+          pokemonFilters: {
+            inPokedex: newInPokedex
+          },
           statsFilters: {
             minimumStatsTotal: newMinimumStatsTotal,
             minimumAttacks: newMinimumAttacks,
             minimumDefenses: newMinimumDefenses,
-          },
-          pokemonFilters: {
-            inPokedex: newInPokedex
           }
         })
           .then((json) => {

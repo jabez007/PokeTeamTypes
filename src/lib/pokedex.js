@@ -175,7 +175,7 @@ export async function getDualTypes(baseScore = BASESCORE) {
 export async function getResistantTypes({
     baseScore = BASESCORE,
     typeFilters = { maxDamageFromScore: true, allowQuadrupleDamage: true, limitQuadrupleDamage: true },
-    pokemonFilters = { allowMegas: false },
+    pokemonFilters = { inPokedex: 'national', allowMegas: false },
     statsFilters = { minimumStatsTotal: 500, minimumAttacks: 90, minimumDefenses: 80 }
 } = {}) {
     const _typeFilters = {
@@ -185,6 +185,7 @@ export async function getResistantTypes({
         ...typeFilters
     }
     const _pokemonFilters = {
+        inPokedex: 'national',
         allowMegas: false,
         ...pokemonFilters
     }
@@ -268,6 +269,11 @@ export async function getResistantTypes({
                                     ['koraidon', 'miraidon', 'roaring-moon', 'iron-valiant', 'great-tusk', 'brute-bonnet', 'sandy-shocks', 'scream-tail', 'flutter-mane', 'slither-wing', 'iron-treads', 'iron-moth', 'iron-hands', 'iron-jugulis', 'iron-thorns', 'iron-bundle', 'ting-lu', 'chien-pao', 'wo-chien', 'chi-yu', 'gholdengo'].includes(p.pokemon.name) // gen 9
                                 ) {
                                     //console.log(`Not breedable: ${p.pokemon.name}`)
+                                    return null
+                                }
+                                //
+                                if (!species.pokedex_numbers.some((pn) => pn.pokedex.name.includes(_pokemonFilters.inPokedex))) {
+                                    console.log(`Missing from ${_pokemonFilters.inPokedex} pokedex: ${p.pokemon.name}`)
                                     return null
                                 }
                                 //
