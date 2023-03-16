@@ -196,6 +196,15 @@ export async function getResistantTypes({
         ...statsFilters
     }
 
+    const pokedexMaps = {
+        'national': ['national'],
+        'kanto': ['letsgo-kanto'],
+        'galar': ['galar', 'isle-of-armor', 'crown-tundra'],
+        'sinnoh': ['sinnoh'],
+        'hisui': ['hisui'],
+        'paldea': ['paldea', 'teal-mask', 'indigo-disk']
+    }
+
     return (await Promise.all(
         (await getBaseTypes(baseScore))
             .concat(await getDualTypes(baseScore))
@@ -272,8 +281,10 @@ export async function getResistantTypes({
                                     return null
                                 }
                                 //
-                                if (!species.pokedex_numbers.some((pn) => pn.pokedex.name.includes(_pokemonFilters.inPokedex))) {
-                                    console.log(`Missing from ${_pokemonFilters.inPokedex} pokedex: ${p.pokemon.name}`)
+                                if (!species.pokedex_numbers.some((pn) => 
+                                    (pokedexMaps[_pokemonFilters.inPokedex] || []).some((pm) => pn.pokedex.name.includes(pm))
+                                )) {
+                                    //console.log(`Missing from ${_pokemonFilters.inPokedex} pokedex: ${p.pokemon.name}`)
                                     return null
                                 }
                                 //

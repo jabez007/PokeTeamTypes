@@ -60,7 +60,7 @@
             <va-select
               label="Pokemon from"
               v-model="inPokedex"
-              :options="['national', 'galar', 'sinnoh', 'hisui', 'paldea']"
+              :options="['national', 'kanto', 'galar', 'sinnoh', 'hisui', 'paldea']"
               searchable
             >
               <template #content="{ value }">
