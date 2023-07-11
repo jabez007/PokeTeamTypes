@@ -207,7 +207,7 @@
           </va-sidebar-item-title>
         </va-sidebar-item-content>
       </va-sidebar-item>
-      <!--va-sidebar-item>
+      <va-sidebar-item>
         <va-sidebar-item-content>
           <va-icon name="playlist_add" />
           <va-sidebar-item-title>
@@ -217,7 +217,7 @@
             />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
-      </va-sidebar-item-->
+      </va-sidebar-item>
       <!--va-sidebar-item>
         <va-sidebar-item-content>
           <va-icon name="playlist_remove" />

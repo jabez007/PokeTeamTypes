@@ -190,8 +190,8 @@ export async function getResistantTypes({
         ...pokemonFilters
     }
     const _statsFilters = {
-        minimumStatsTotal: 500,
-        minimumAttacks: 90,
+        minimumStatsTotal: 480,
+        minimumAttacks: 80,
         minimumDefenses: 80,
         ...statsFilters
     }
