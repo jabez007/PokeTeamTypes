@@ -214,8 +214,8 @@ export async function getResistantTypes({
                     ||
                     t.damage_relations.damage_from_score <= baseScore
                 )
-                &&
-                t.damage_relations.damage_to_score >= t.damage_relations.damage_from_score
+                //&&
+                //t.damage_relations.damage_to_score >= t.damage_relations.damage_from_score
                 &&
                 (
                     (
