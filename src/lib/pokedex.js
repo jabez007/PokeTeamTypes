@@ -395,8 +395,13 @@ export function generateTeams({
                     (
                         _teamComposition.allowSharedWeaknesses
                         ||
-                        currentType.weaknesses
-                            .every((w) => !t.weaknesses.includes(w))
+                        (
+                            currentType.weaknesses
+                                .every((w) => !t.weaknesses.includes(w))
+                            &&
+                            currentType.ineffectives
+                                .every((i) => !t.ineffectives.includes(i))
+                        )
                     )
                     &&
                     (
