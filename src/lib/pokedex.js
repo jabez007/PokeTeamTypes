@@ -202,7 +202,7 @@ export async function getResistantTypes({
         'galar': ['galar', 'isle-of-armor', 'crown-tundra'],
         'sinnoh': ['sinnoh'],
         'hisui': ['hisui'],
-        'paldea': ['paldea', 'teal-mask', 'indigo-disk']
+        'paldea': ['paldea', 'kitakami', 'indigo-disk']
     }
 
     return (await Promise.all(
