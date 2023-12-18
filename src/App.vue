@@ -157,8 +157,8 @@
               v-model="teamSize"
               type="number"
               min="3"
-              max="6"
-              step="3"
+              max="4"
+              step="1"
             />
           </va-sidebar-item-title>
         </va-sidebar-item-content>
@@ -260,12 +260,12 @@ export default {
     showEmpty: false,
     types: [],
     selectedPokemon: {},
-    teamSize: 3,
+    teamSize: 4,
     allowSharedTypes: true,
     allowSharedWeaknesses: false,
     coverWeaknesses: true,
     teams: [],
-    totalTypesOnTeam: 3,
+    totalTypesOnTeam: 4,
     typesOnTeam: [],
     typesNotOnTeam: [],
   }),
